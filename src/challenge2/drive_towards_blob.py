@@ -2,7 +2,7 @@
 import rospy
 from ackermann_msgs.msg import AckermannDriveStamped
 from std_msgs.msg import Int32MultiArray, Int32
-from beaverworks77.msg import blob as BlobMsg
+from final77.msg import blob as BlobMsg
 
 import math
 

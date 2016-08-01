@@ -5,7 +5,7 @@ import rospy
 
 from sensor_msgs.msg import Image
 from std_msgs.msg import Int32MultiArray
-from beaverworks77.msg import blob as BlobMsg
+from final77.msg import blob as BlobMsg
 
 from cv_bridge import CvBridge, CvBridgeError
 import threading
