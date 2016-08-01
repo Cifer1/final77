@@ -110,22 +110,25 @@ class ColorTracker:
         area = cv2.contourArea(c)
         if area < 1000: # minimum area threshold
             return None
-
+        
         perim = cv2.arcLength(c, True) # perimeter
         approx = cv2.approxPolyDP(c, 0.05 * perim, True)
-
+        
+        #detecting circles
+        (x,y), radius = cv2.minEnclosingCircle(c)
+        
         if len(approx) == 4:
             (x, y, w, h) = cv2.boundingRect(approx)
-	    ar = w / float(h)
-	    self.shape = "square" if ar >= 0.95 and ar <= 1.05 else "rectangle"
+	        ar = w / float(h)
+	        self.shape = "square" if ar >= 0.95 and ar <= 1.05 else "rectangle"
         elif len(approx) == 12:
 		    self.shape = "cross"
 		    
-        elif len(approx) > 12:
+        elif abs(math.pi*radius**2 - area) < .1 * area:
 		    self.shape = "circle"
 		    
         else:
-		    pass
+		    return None
 
             
 
@@ -135,7 +138,7 @@ class ColorTracker:
             cv2.drawContours(img, [approx], -1, (0, 255, 0), 5) 
 
             coord = (approx[0][0][0], approx[0][0][1])
-            cv2.putText(img, color, coord, cv2.FONT_HERSHEY_PLAIN, 3, (255, 255, 255),  2)
+            cv2.putText(img, self.shape, coord, cv2.FONT_HERSHEY_PLAIN, 3, (255, 255, 255),  2)
 
         M = cv2.moments(approx)
         cx, cy = int(M['m10']/M['m00']), int(M['m01']/M['m00'])
@@ -146,7 +149,7 @@ class ColorTracker:
         #self.photo_iter = 0
         #self.photo_timer = rospy.Timer(rospy.Duration(0.5), self.saveImage(img))
         now = rospy.Time.now()
-	    if self.lock.acquire(False):
+    	if self.lock.acquire(False):
             self.saveImage(img, now)
 
         if self.debugging:

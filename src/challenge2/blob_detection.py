@@ -37,13 +37,17 @@ class ColorTracker:
         green_lower = np.array([54, 30, 60])
         green_upper = np.array([72, 255, 255])
 
-        ret = self.detect_color_blob(img, green_lower, green_upper)
+        color = "GREEN"
+        ret = self.detect_color_blob(img, green_lower, green_upper, color)
         color_code = 1
+        
         if ret == None:
             red_lower = np.array([0, 160, 130])
             red_upper = np.array([15, 255, 255])
-            ret = self.detect_color_blob(img, red_lower, red_upper)
+            color = "RED"
+            ret = self.detect_color_blob(img, red_lower, red_upper, color)
             color_code = 2
+            
 
         if ret == None:
             cx = 0
@@ -62,7 +66,7 @@ class ColorTracker:
         self.pub_detection.publish(msg)
         # publish message
 
-    def detect_color_blob(self, img, lower, upper):
+    def detect_color_blob(self, img, lower, upper, color):
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, lower, upper)
 
@@ -96,7 +100,7 @@ class ColorTracker:
             cv2.drawContours(img, [approx], -1, (0, 255, 0), 5) 
 
             coord = (approx[0][0][0], approx[0][0][1])
-            cv2.putText(img, "GREEN", coord, cv2.FONT_HERSHEY_PLAIN, 3, (255, 255, 255),  2)
+            cv2.putText(img, color, coord, cv2.FONT_HERSHEY_PLAIN, 3, (255, 255, 255),  2)
 
         M = cv2.moments(approx)
         cx, cy = int(M['m10']/M['m00']), int(M['m01']/M['m00'])
