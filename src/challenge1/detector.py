@@ -113,6 +113,31 @@ class saveColor:
                 for x in contour[0]:
                         appendedStuff = contours(x,color)
                         contourList.append(appendedStuff)
+
+        def pinkImageDetection(self, image):
+            x,y,w,h = cv2.boundingRect(image.contour)
+            sliced = hsv[x:x+w,y:y+h,:]
+            hsvTest = cv2.calcHist(sliced,[0,1],None,[180,256],ranges)
+            racecarVal = cv2.compareHist(hsvTest,self.racecar,cv2.cv.CV_COMP_CORREL)
+            ariVal = cv2.compareHist(hsvTest,self.ari,cv2.cv.CV_COMP_CORREL)
+            sertacVal = cv2.compareHist(hsvTest,self.sertac,cv2.cv.CV_COMP_CORREL)
+            catVal = cv2.compareHist(hsvTest,self.cat,cv2.cv.CV_COMP_CORREL)
+            maxVal = max(racecarVal,ariVal,sertacVal,catVal)
+
+            if maxVal == racecarVal:
+                print "racecar"
+                    #self.saveImg(img,"racecar")
+            elif maxVal == ariVal:
+                print "ari"
+                    #self.saveImg(img,"racecar")
+            elif maxVal == sertacVal:
+                print "karaman"
+                    #self.saveImg(img,"racecar")
+            else:
+                print "cat"
+                    #self.saveImg(img,"racecar")
+
+
 class contours:
         def __init__(self,contour,text):
                 self.contour = contour
