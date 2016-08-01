@@ -25,7 +25,7 @@ class PotentialField:
         self.charge_laser_particle = 0.07
         self.charge_forward_boost = 25.0
         self.boost_distance = 0.5
-        self.p_speed = 0.03       
+        self.p_speed = 0.03
         self.p_steering = 1.0
 
         # subscribe to laserscans. Force output message data to be in numpy arrays.
@@ -73,18 +73,14 @@ class PotentialField:
 	command_msg.drive.speed = self.kickOut(command_msg.drive.speed)
         # Publish the command
         self.pub_nav.publish(command_msg)
+
     def kickOut(self, speed):
-	self.speedHist = (self.speedHist * .75) + (abs(speed) * .25)
-	print self.speedHist
-	if self.speedHist < 0.2:
-		return -1.0
-	else:
-		return speed
-		
-	
-		
-
-
+    	self.speedHist = (self.speedHist * .75) + (abs(speed) * .25)
+    	print self.speedHist
+    	if self.speedHist < 0.2:
+    		return -1.0
+    	else:
+    		return speed
 
 if __name__ == "__main__":
     # initialize the ROS client API, giving the default node name
